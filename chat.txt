@@ -1,0 +1,272 @@
+Project Overview
+The application will manage:
+
+Employee Assignments: Assign employees to specific projects.
+Project Management: Track project details, status, tech stack, and timelines.
+Finance Tracking: Manage budgets and financial transactions.
+Purchase Orders: Generate and manage client-specific purchase orders.
+Invoicing: Generate invoices for projects, employees, and clients.
+Technologies to Use
+Backend: Spring Boot (REST APIs).
+Database: MongoDB (for schema flexibility and scalability).
+Frontend: Angular (for a modern, dynamic user interface).
+Messaging: Kafka (for event-driven communication between microservices).
+Roles and Responsibilities
+Admin Role
+Manage projects.
+Handle purchase orders.
+Oversee finance.
+View analytics for each project's finances.
+Employee Role
+Register and manage personal details.
+View past and present assigned projects.
+View and download salary slips or invoices for assigned projects.
+Client Role
+Register and manage account details.
+Enter project details.
+Send budget when receiving a purchase order from the admin.
+View and download project invoices as PDFs.
+Microservices and Their Responsibilities
+Employee Microservice
+CRUD operations for employee data.
+Manage employee personal details.
+Track past and present assigned projects.
+Generate and provide salary slips or invoices.
+Project Microservice
+Manage project details (CRUD operations).
+Assign employees to projects.
+Track project status and timelines.
+Handle project creation by clients and approval by admin.
+Finance Microservice
+Manage budgets and financial transactions.
+Approve or reject expenses.
+Generate financial reports.
+Purchase Order Microservice
+Generate and manage purchase orders.
+Request client budgets for projects.
+Invoice Microservice
+Generate invoices for projects and employees.
+Manage invoice records.
+Provide invoices for download as PDFs.
+Inter-Microservice Communication
+Client ↔ Project Microservice
+Admin ↔ Project Microservice
+Admin ↔ Purchase Order Microservice
+Client ↔ Purchase Order Microservice
+Purchase Order Microservice ↔ Finance Microservice
+Invoice Microservice ↔ Client
+Invoice Microservice ↔ Employee Microservice
+Example Workflow
+Client Registration and Project Creation:
+
+Client registers via Client Registration endpoint.
+Client creates a project via Project Microservice's /projects endpoint.
+Project Microservice notifies Admin for project approval.
+Admin Project Approval and Purchase Order Request:
+
+Admin views the project in the dashboard and approves it via Project Microservice's /projects/{id}/approve endpoint.
+Admin generates a purchase order via Purchase Order Microservice's /purchase-orders endpoint.
+Client Budget Submission:
+
+Client receives the purchase order and submits budget details via Purchase Order Microservice's /purchase-orders/{id}/budget endpoint.
+Purchase Order Microservice updates Finance Microservice with the budget details.
+Invoice Generation and Download:
+
+Invoice Microservice generates invoices for the project.
+Client views and downloads project invoices via Invoice Microservice's /invoices/{id}/download endpoint.
+Employee views and downloads salary slips or invoices via Employee Microservice's /employees/{id}/invoices endpoint.
+Step-by-Step Guide to Create Microservices
+Step 1: Create Employee Service using Spring Initializr
+Go to Spring Initializr:
+Open your web browser and navigate to Spring Initializr.
+Configure the Project:
+Project: Maven Project
+Language: Java
+Spring Boot: 2.5.4 (or the latest stable version)
+Project Metadata:
+Group: com.example
+Artifact: employee-service
+Name: employee-service
+Package Name: com.example.employee
+Packaging: Jar
+Java: 11 (or your preferred version)
+Add Dependencies:
+Spring Web
+Spring Data MongoDB
+Spring for Apache Kafka
+Spring Boot Actuator
+Spring Boot DevTools
+Validation
+Generate the Project:
+Click on the "Generate" button to download the project as a ZIP file.
+Extract the ZIP File:
+Extract the downloaded ZIP file to your desired location.
+Step 2: Open the Project in Your IDE
+Open the Project:
+Open your IDE (e.g., IntelliJ IDEA, Eclipse, VS Code) and import the extracted project.
+Step 3: Configure application.properties
+Open application.properties:
+Navigate to application.properties.
+Add the following configurations:
+Step 4: Implement Basic CRUD Operations
+Create the Employee Model:
+
+Create a new file Employee.java in src/main/java/com/example/employee/model/:
+Create the Employee Repository:
+
+Create a new file EmployeeRepository.java in src/main/java/com/example/employee/repository/:
+Create the Employee Service:
+
+Create a new file EmployeeService.java in src/main/java/com/example/employee/service/:
+Create the Employee Controller:
+
+Create a new file EmployeeController.java in src/main/java/com/example/employee/controller/:
+Step 5: Repeat for Other Microservices
+Follow similar steps to create and configure the project-service, finance-service, purchase-order-service, and invoice-service with their respective responsibilities and dependencies.
+
+Step 6: Implement Inter-Microservice Communication
+Use Kafka for asynchronous event-driven communication.
+
+Step 7: Test and Deploy
+Write test cases for APIs using JUnit and Mockito.
+Test Kafka producers and consumers.
+Test the entire application using Postman or cURL.
+Deploy microservices and Angular frontend.
+MongoDB Setup Using VS Code Extension
+Step 1: Install MongoDB Extension for VS Code
+Open Visual Studio Code:
+Launch Visual Studio Code.
+Install MongoDB Extension:
+Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window or by pressing Ctrl+Shift+X.
+Search for "MongoDB" and install the "MongoDB for VS Code" extension by MongoDB.
+Step 2: Connect to MongoDB
+Open the MongoDB Extension:
+Click on the MongoDB icon in the Activity Bar to open the MongoDB extension.
+Add a Connection:
+Click on the "Connect" button.
+In the "Connection String" field, enter your MongoDB connection string. For a local MongoDB instance, it would be:
+Click "Connect".
+Step 3: Create a Database and Collection
+Create a Database:
+In the MongoDB extension view, right-click on your connection and select "Create Database".
+Enter the database name as employee_db.
+Create a Collection:
+Right-click on the employee_db database and select "Create Collection".
+Enter the collection name as employees.
+Step 4: Insert and Query Data
+Insert Data:
+Right-click on the employees collection and select "Insert Document".
+Enter the following JSON document and click "Insert":
+Query Data:
+Right-click on the employees collection and select "Find Documents".
+This will open a new editor tab with the query results.
+Step 5: Configure Spring Boot to Connect to MongoDB
+Add MongoDB Dependency:
+Ensure you have the MongoDB dependency in your pom.xml:
+Configure MongoDB Connection:
+Open application.properties and add the MongoDB connection details:
+Step 6: Verify MongoDB Connection
+Run the Application:
+Start your Spring Boot application and ensure it connects to MongoDB without errors.
+Insert and Retrieve Data:
+Use the Employee Service and Controller to insert and retrieve data from the MongoDB database.
+MongoDB Playground Script
+This should give you a solid foundation to start building your backend microservices and set up MongoDB using the MongoDB extension in Visual Studio Code. Let me know if you need further assistance!
+
+Project Service Implementation
+Step 1: Create Project Service using Spring Initializr
+Go to Spring Initializr:
+Open your web browser and navigate to Spring Initializr.
+Configure the Project:
+Project: Maven Project
+Language: Java
+Spring Boot: 2.5.4 (or the latest stable version)
+Project Metadata:
+Group: com.example
+Artifact: project-service
+Name: project-service
+Package Name: com.example.project
+Packaging: Jar
+Java: 11 (or your preferred version)
+Add Dependencies:
+Spring Web
+Spring Data MongoDB
+Spring for Apache Kafka
+Spring Boot Actuator
+Spring Boot DevTools
+Validation
+Generate the Project:
+Click on the "Generate" button to download the project as a ZIP file.
+Extract the ZIP File:
+Extract the downloaded ZIP file to your desired location.
+Step 2: Open the Project in Your IDE
+Open the Project:
+Open your IDE (e.g., IntelliJ IDEA, Eclipse, VS Code) and import the extracted project.
+Step 3: Configure application.properties
+Open application.properties:
+Navigate to application.properties.
+Add the following configurations:
+Step 4: Implement Basic CRUD Operations
+Create the Project Model:
+
+Create a new file Project.java in src/main/java/com/example/project/model/:
+Create the Project Repository:
+
+Create a new file ProjectRepository.java in src/main/java/com/example/project/repository/:
+Create the Project Service:
+
+Create a new file ProjectService.java in src/main/java/com/example/project/service/:
+Create the Project Controller:
+
+Create a new file ProjectController.java in src/main/java/com/example/project/controller/:
+Finance Service Implementation
+Step 1: Create Finance Service using Spring Initializr
+Go to Spring Initializr:
+Open your web browser and navigate to Spring Initializr.
+Configure the Project:
+Project: Maven Project
+Language: Java
+Spring Boot: 2.5.4 (or the latest stable version)
+Project Metadata:
+Group: com.example
+Artifact: finance-service
+Name: finance-service
+Package Name: com.example.finance
+Packaging: Jar
+Java: 11 (or your preferred version)
+Add Dependencies:
+Spring Web
+Spring Data MongoDB
+Spring for Apache Kafka
+Spring Boot Actuator
+Spring Boot DevTools
+Validation
+Generate the Project:
+Click on the "Generate" button to download the project as a ZIP file.
+Extract the ZIP File:
+Extract the downloaded
+GitHub Copilot
+Sure, let's continue from where we left off. We were updating the ProjectService to handle the project approval and connect to the finance-service using WebClient.
+
+Step 1: Update ProjectService
+Add the WebClient to the ProjectService and update the approveProject method:
+
+Step 2: Update ProjectController
+Ensure the ProjectController calls the approveProject method in the ProjectService:
+
+Step 3: Update FinanceController in finance-service
+Ensure the FinanceController has an endpoint to handle the approval request:
+
+Step 4: Test the Endpoint
+After making the necessary changes, test the approveProject endpoint again:
+
+Request:
+
+Method: POST
+URL: http://localhost:8080/projects/101/approve
+Response:
+
+Status: 200 OK
+Make sure both the project-service and finance-service are running and accessible. 
+The project-service should be able to call the finance-service to update the financial 
+status of the project upon approval.

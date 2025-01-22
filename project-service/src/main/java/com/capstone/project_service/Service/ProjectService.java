@@ -1,18 +1,23 @@
 package com.capstone.project_service.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.capstone.project_service.Model.Project;
 import com.capstone.project_service.Repository.ProjectRepository;
+
+
 @Service
 public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
@@ -26,9 +31,9 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Optional<Project> updateProject(String id, Project project) {
+    public Project updateProject(String id, Project project) {
         project.setId(id);
-        return Optional.of(projectRepository.save(project));
+        return projectRepository.save(project);
     }
 
     public void deleteProject(String id) {
@@ -40,7 +45,17 @@ public class ProjectService {
         if (projectOptional.isPresent()) {
             Project project = projectOptional.get();
             project.setStatus("Approved");
-            return projectRepository.save(project);
+            projectRepository.save(project);
+
+            // Call the finance-service to update the financial status
+            webClientBuilder.build()
+                .post()
+                .uri("http://finance-service/finance/project/" + id + "/approve")
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block(); // Blocking for simplicity, consider using reactive approach
+
+            return project;
         }
         return null;
     }
